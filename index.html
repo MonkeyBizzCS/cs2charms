@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+      <title>CS2 Charms</title>
+      <style>
+         body {
+         font-family: Arial, sans-serif;
+         background-color: #121212;
+         color: #e0e0e0;
+         margin: 0;
+         padding: 20px;
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         min-height: 100vh;
+         }
+         .logo-container {
+         display: flex;
+         margin-bottom: 20px;
+         }
+         .logo-container img {
+         max-width: 200px;
+         height: auto;
+         border-radius: 8px;
+         }
+         .grid {
+         display: grid;
+         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+         gap: 20px;
+         justify-content: center;
+         justify-items: center;
+         max-width: 1200px;
+         width: 100%;
+         margin: 0 auto;
+         }
+         .card {
+         background-color: #1e1e1e;
+         border: 1px solid #333;
+         padding: 20px;
+         text-align: center;
+         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+         transition: transform 0.3s;
+         }
+         .card:hover {
+         transform: scale(1.05);
+         }
+         .card img {
+         max-width: 100%;
+         height: auto;
+         cursor: pointer;
+         border-radius: 4px;
+         margin-bottom: 10px;
+         }
+         .slider-container {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         gap: 10px;
+         width: 100%;
+         margin-bottom: 10px;
+         }
+         .slider {
+         width: 100%;
+         margin-top: 10px;
+         }
+         input[type="number"] {
+         width: 100px;
+         background-color: #333;
+         color: #e0e0e0;
+         border: 1px solid #555;
+         border-radius: 4px;
+         padding: 5px;
+         text-align: center;
+         -moz-appearance: textfield;
+         }
+         input::-webkit-outer-spin-button,
+         input::-webkit-inner-spin-button {
+         -webkit-appearance: none;
+         margin: 0;
+         }
+         .slider-title {
+         margin-bottom: 5px;
+         font-size: 14px;
+         color: #b0b0b0;
+         }
+         .arrow-button {
+         background-color: #333;
+         color: #e0e0e0;
+         border: none;
+         padding: 8px 12px;
+         border-radius: 4px;
+         font-size: 18px;
+         cursor: pointer;
+         transition: background-color 0.2s, transform 0.2s;
+         flex: 1;
+         }
+         .arrow-button:hover {
+         background-color: #444;
+         transform: scale(1.1);
+         }
+         .arrow-button:active {
+         background-color: #555;
+         }
+         .modal {
+         display: none;
+         position: fixed;
+         z-index: 1000;
+         left: 0;
+         top: 0;
+         width: 100%;
+         height: 100%;
+         background-color: rgba(0, 0, 0, 0.8);
+         justify-content: center;
+         align-items: center;
+         }
+         .modal img {
+         max-width: 90%;
+         max-height: 90%;
+         border-radius: 4px;
+         }
+
+         footer {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         margin-top: 20px;
+         color: #b0b0b0;
+         }
+         footer a {
+         color: #b0b0b0;
+         text-decoration: none;
+         margin-left: 10px;
+         }
+         footer a:hover {
+         color: #e0e0e0;
+         }
+         footer i {
+         font-size: 24px;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="logo-container">
+         <a href="https://x.com/MonkeyBizzCS" target="_blank">
+         <img src="https://branding.cdn.cashtrader.pro/monkeybizz.png" alt="MonkeyBizzCS">
+         </a>
+      </div>
+      <div class="grid" id="imageGrid"></div>
+      <div class="modal" id="imageModal">
+         <img id="modalImage" src="" alt="Enlarged Image">
+      </div>
+      <footer>
+         <a href="https://twitter.com/MonkeyBizzCS" target="_blank">
+         <i class="fab fa-twitter"></i>
+         </a>
+      </footer>
+      <script>
+         const items = [
+             { name: 'Die-cast AK', url: 'https://cdn.cs2charms.site/Die_cast_AK/Die_cast_AK_', value: 0},
+         ];
+         
+         function generateCards(items) {
+             const grid = document.getElementById('imageGrid');
+             items.forEach((item, index) => {
+                 
+                 const card = document.createElement('div');
+                 card.classList.add('card');
+         
+                 card.innerHTML = `
+                     <h3>${item.name}</h3>
+                     <img src="${item.url + item.value + '.png'}" alt="${item.name} Image" id="image${index}" onclick="openModal(this)">
+                     <div class="slider-title">Pattern</div>
+                     <div class="slider-container">
+                         <button class="arrow-button" onclick="decrementSlider('slider${index}', 'sliderValue${index}', 'image${index}', '${item.url}')">&lt;</button>
+                         <input type="number" min="0" max="100000" value="0" id="sliderValue${index}" oninput="updateNumberInput(this, 'slider${index}', 'image${index}', '${item.url}')">
+                         <button class="arrow-button" onclick="incrementSlider('slider${index}', 'sliderValue${index}', 'image${index}', '${item.url}')">&gt;</button>
+                     </div>
+                     <input type="range" min="0" max="100000" value="0" class="slider" id="slider${index}" oninput="updateSliderValue(this, 'sliderValue${index}', 'image${index}', '${item.url}')">
+                 `;
+         
+                 grid.appendChild(card);
+             });
+         }
+         
+         function updateSliderValue(slider, valueId, imageId, baseUrl) {
+             const value = slider.value;
+             document.getElementById(valueId).value = value;
+             updateImage(value, imageId, baseUrl);
+         }
+         
+         function updateNumberInput(input, sliderId, imageId, baseUrl) {
+             let value = input.value;
+         
+             if (value === '' || value === undefined) {
+                 value = 0;
+             }
+         
+             if (value > 100000) value = 100000;
+             if (value < 0) value = 0;
+             document.getElementById(sliderId).value = value; 
+             input.value = value;
+             updateImage(value, imageId, baseUrl);
+         }
+         
+         function incrementSlider(sliderId, valueId, imageId, baseUrl) {
+             const slider = document.getElementById(sliderId);
+             const newValue = parseInt(slider.value) + 1;
+             if (newValue <= 100000) {
+                 slider.value = newValue;
+                 updateSliderValue(slider, valueId, imageId, baseUrl);
+             }
+         }
+         
+         function decrementSlider(sliderId, valueId, imageId, baseUrl) {
+             const slider = document.getElementById(sliderId);
+             const newValue = parseInt(slider.value) - 1;
+             if (newValue >= 0) {
+                 slider.value = newValue;
+                 updateSliderValue(slider, valueId, imageId, baseUrl);
+             }
+         }
+         
+         function updateImage(value, imageId, baseUrl) {
+             const imageUrl = `${baseUrl}${value}.png`;
+             document.getElementById(imageId).src = imageUrl;
+         }
+         
+         function openModal(image) {
+             const modal = document.getElementById('imageModal');
+             const modalImage = document.getElementById('modalImage');
+             modalImage.src = image.src;
+             modal.style.display = 'flex';
+         }
+         
+         window.onclick = function(event) {
+             const modal = document.getElementById('imageModal');
+             if (event.target === modal) {
+                 modal.style.display = 'none';
+             }
+         }
+         
+         window.onload = () => generateCards(items);
+      </script>
+   </body>
+</html>
