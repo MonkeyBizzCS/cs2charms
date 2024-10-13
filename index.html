@@ -188,12 +188,7 @@
          
                  card.innerHTML = `
                      <h3>${item.name}</h3>
-                     <div id="image${index}" style="position: relative">
                      <img src="${item.url + item.value + '.png'}" alt="${item.name} Image" id="image${index}" onclick="openModal(this)">
-                     <div style="position: absolute; top: 8px; right: 8px;">
-                        <i class="fa-solid fa-expand fa-lg"></i>
-                     </div>
-                     </div>
                      <div class="slider-title">Pattern</div>
                      <div class="slider-container">
                          <button class="arrow-button" onclick="decrementSlider('slider${index}', 'sliderValue${index}', 'image${index}', '${item.url}')">&lt;</button>
