@@ -210,10 +210,6 @@
                  grid.appendChild(card);
              });
          }
-
-         function getInspectUrl() {
-
-         }
          
          function updateSliderValue(slider, valueId, colorBlockId, rgbValueId, hexValueId, inspectButtonId, item) {
             const value = slider.value;
@@ -227,7 +223,7 @@
             }
         }
 
-        function updateNumberInput(input, sliderId, colorBlockId, rgbValueId, hexValueId, item) {
+        function updateNumberInput(input, sliderId, colorBlockId, rgbValueId, hexValueId, inspectButtonId, item) {
             let value = input.value;
 
             if (value === '' || value === undefined) {
