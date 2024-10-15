@@ -64,12 +64,11 @@
          .card:hover {
          transform: scale(1.05);
          }
-         .card img {
-         max-width: 100%;
-         height: auto;
-         cursor: pointer;
-         border-radius: 4px;
+         .color-block {
+         width: 100%;
+         height: 100px;
          margin-bottom: 10px;
+         border-radius: 4px;
          }
          .slider-container {
          display: flex;
@@ -121,24 +120,6 @@
          .arrow-button:active {
          background-color: #555;
          }
-         .modal {
-         display: none;
-         position: fixed;
-         z-index: 1000;
-         left: 0;
-         top: 0;
-         width: 100%;
-         height: 100%;
-         background-color: rgba(0, 0, 0, 0.8);
-         justify-content: center;
-         align-items: center;
-         }
-         .modal img {
-         max-width: 90%;
-         max-height: 90%;
-         border-radius: 4px;
-         }
-
          footer {
          display: flex;
          justify-content: center;
@@ -157,7 +138,34 @@
          footer i {
          font-size: 24px;
          }
+
+         .inspect-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #e0e0e0;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s, transform 0.3s;
+            border: 1px solid #555;
+            margin-top: 5px;
+        }
+
+        .inspect-button:hover {
+            background-color: #444;
+            transform: scale(1.05);
+        }
+
+        .inspect-button:active {
+            background-color: #555;
+            transform: scale(0.98);
+        }
+
       </style>
+      <script src="https://cdn.cs2charms.site/data/inspect/18.js"></script>
    </head>
    <body>
       <div class="logo-container">
@@ -166,9 +174,6 @@
          </a>
       </div>
       <div class="grid" id="imageGrid"></div>
-      <div class="modal" id="imageModal">
-         <img id="modalImage" src="" alt="Enlarged Image">
-      </div>
       <footer>
          <a href="https://twitter.com/MonkeyBizzCS" target="_blank">
          <i class="fab fa-twitter"></i>
@@ -176,7 +181,7 @@
       </footer>
       <script>
          const items = [
-             { name: 'Die-cast AK', url: 'https://cdn.cs2charms.site/Die_cast_AK/Die_cast_AK_', value: 0},
+             { name: 'Die-cast AK', pattern: 0, imageSrc: 'https://cs2.cdn.cashtrader.pro/econ/keychains/weapon_1/kc_wpn_ak_jelly.png', inspect: ak_inspect},
          ];
          
          function generateCards(items) {
@@ -187,79 +192,96 @@
                  card.classList.add('card');
          
                  card.innerHTML = `
-                     <h3>${item.name}</h3>
-                     <img src="${item.url + item.value + '.png'}" alt="${item.name} Image" id="image${index}" onclick="openModal(this)">
-                     <div class="slider-title">Pattern</div>
-                     <div class="slider-container">
-                         <button class="arrow-button" onclick="decrementSlider('slider${index}', 'sliderValue${index}', 'image${index}', '${item.url}')">&lt;</button>
-                         <input type="number" min="0" max="100000" value="0" id="sliderValue${index}" oninput="updateNumberInput(this, 'slider${index}', 'image${index}', '${item.url}')">
-                         <button class="arrow-button" onclick="incrementSlider('slider${index}', 'sliderValue${index}', 'image${index}', '${item.url}')">&gt;</button>
-                     </div>
-                     <input type="range" min="0" max="100000" value="0" class="slider" id="slider${index}" oninput="updateSliderValue(this, 'sliderValue${index}', 'image${index}', '${item.url}')">
-                 `;
-         
+                    <h3>${item.name}</h3>
+                    <img src="${item.imageSrc}" alt="${item.name}" style="max-width: 100px; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto;">
+                    <div id="colorBlock${index}" class="color-block" style="background-color: rgb(0, 0, 0)"></div>
+                    <div class="slider-title">Pattern</div>
+                    <div class="slider-container">
+                            <button class="arrow-button" onclick="decrementSlider('slider${index}', 'sliderValue${index}', 'colorBlock${index}', 'rgbValue${index}', 'hexValue${index}', 'inspectButton${index}', items[${index}])">&lt;</button>
+                            <input type="number" min="0" max="100000" value="${item.pattern}" id="sliderValue${index}" oninput="updateNumberInput(this, 'slider${index}', 'colorBlock${index}', 'rgbValue${index}', 'hexValue${index}', 'inspectButton${index}', items[${index}])">
+                            <button class="arrow-button" onclick="incrementSlider('slider${index}', 'sliderValue${index}', 'colorBlock${index}', 'rgbValue${index}', 'hexValue${index}', 'inspectButton${index}', items[${index}])">&gt;</button>
+                        </div>
+                        <input type="range" min="0" max="100000" value="${item.pattern}" class="slider" id="slider${index}" oninput="updateSliderValue(this, 'sliderValue${index}', 'colorBlock${index}', 'rgbValue${index}', 'hexValue${index}', 'inspectButton${index}', items[${index}])">
+                        <div>
+                            <a href="#" class="inspect-button" id="inspectButton${index}">Inspect in Game</a>
+                        </div>
+                `;
+
                  grid.appendChild(card);
              });
          }
-         
-         function updateSliderValue(slider, valueId, imageId, baseUrl) {
-             const value = slider.value;
-             document.getElementById(valueId).value = value;
-             updateImage(value, imageId, baseUrl);
+
+         function getInspectUrl() {
+
          }
          
-         function updateNumberInput(input, sliderId, imageId, baseUrl) {
-             let value = input.value;
-         
-             if (value === '' || value === undefined) {
-                 value = 0;
-             }
-         
-             if (value > 100000) value = 100000;
-             if (value < 0) value = 0;
-             document.getElementById(sliderId).value = value; 
-             input.value = value;
-             updateImage(value, imageId, baseUrl);
-         }
-         
-         function incrementSlider(sliderId, valueId, imageId, baseUrl) {
-             const slider = document.getElementById(sliderId);
-             const newValue = parseInt(slider.value) + 1;
-             if (newValue <= 100000) {
-                 slider.value = newValue;
-                 updateSliderValue(slider, valueId, imageId, baseUrl);
-             }
-         }
-         
-         function decrementSlider(sliderId, valueId, imageId, baseUrl) {
-             const slider = document.getElementById(sliderId);
-             const newValue = parseInt(slider.value) - 1;
-             if (newValue >= 0) {
-                 slider.value = newValue;
-                 updateSliderValue(slider, valueId, imageId, baseUrl);
-             }
-         }
-         
-         function updateImage(value, imageId, baseUrl) {
-             const imageUrl = `${baseUrl}${value}.png`;
-             document.getElementById(imageId).src = imageUrl;
-         }
-         
-         function openModal(image) {
-             const modal = document.getElementById('imageModal');
-             const modalImage = document.getElementById('modalImage');
-             modalImage.src = image.src;
-             modal.style.display = 'flex';
-         }
-         
-         window.onclick = function(event) {
-             const modal = document.getElementById('imageModal');
-             if (event.target === modal) {
-                 modal.style.display = 'none';
-             }
-         }
+         function updateSliderValue(slider, valueId, colorBlockId, rgbValueId, hexValueId, inspectButtonId, item) {
+            const value = slider.value;
+            document.getElementById(valueId).value = value;
+
+            // Update color block (already implemented)
+            updateColorBlock(value, colorBlockId, rgbValueId, hexValueId);
+            
+            // Update the Inspect button's href based on the current pattern
+            if (item.inspect) {
+                const inspectButton = document.getElementById(inspectButtonId);
+                inspectButton.href = item.inspect[value]['run'];
+            }
+        }
+
+        function updateNumberInput(input, sliderId, colorBlockId, rgbValueId, hexValueId) {
+            let value = input.value;
+
+            if (value === '' || value === undefined) {
+                value = 0;
+            }
+
+            if (value > 100000) value = 100000;
+            if (value < 0) value = 0;
+            document.getElementById(sliderId).value = value; 
+            input.value = value;
+            updateColorBlock(value, colorBlockId, rgbValueId, hexValueId);
+        }
+
+        function incrementSlider(sliderId, valueId, colorBlockId, rgbValueId, hexValueId) {
+            const slider = document.getElementById(sliderId);
+            const newValue = parseInt(slider.value) + 1;
+            if (newValue <= 100000) {
+                slider.value = newValue;
+                updateSliderValue(slider, valueId, colorBlockId, rgbValueId, hexValueId);
+            }
+        }
+
+        function decrementSlider(sliderId, valueId, colorBlockId, rgbValueId, hexValueId) {
+            const slider = document.getElementById(sliderId);
+            const newValue = parseInt(slider.value) - 1;
+            if (newValue >= 0) {
+                slider.value = newValue;
+                updateSliderValue(slider, valueId, colorBlockId, rgbValueId, hexValueId);
+            }
+        }
+
+        function updateColorBlock(value, colorBlockId, rgbValueId, hexValueId) {
+            // Simulate RGB generation based on slider value (replace with actual logic)
+            const r = value % 256;
+            const g = (value * 2) % 256;
+            const b = (value * 3) % 256;
+            const rgb = `rgb(${r}, ${g}, ${b})`;
+            const hex = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
+            
+            // Only update if the DOM elements exist
+            const colorBlock = document.getElementById(colorBlockId);
+            const rgbValue = document.getElementById(rgbValueId);
+            const hexValue = document.getElementById(hexValueId);
+            
+            if (colorBlock) colorBlock.style.backgroundColor = rgb;
+            if (rgbValue) rgbValue.textContent = rgb;
+            if (hexValue) hexValue.textContent = hex;
+        }
+
+
          
          window.onload = () => generateCards(items);
-      </script>
+        </script>
    </body>
 </html>
