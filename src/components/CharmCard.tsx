@@ -1,21 +1,29 @@
 import React, {useState, useEffect} from 'react';
 import { generateKeyChainInspectUrl } from '../utils/KeychainGen';
+import { getRarity } from '../utils/Rarity';
 
 export interface CardProps {
     id: number;
+    rarity: number;
     name: string;
     pattern: number;
     colorBased: boolean;
     imageSrc: string;
   }
 
-const CharmCard: React.FC<CardProps> = ({ id, name, pattern, colorBased, imageSrc }) => {
+const CharmCard: React.FC<CardProps> = ({ id, rarity, name, pattern, colorBased, imageSrc }) => {
     const [currentPattern, setCurrentPattern] = useState<number>(pattern);
     const [inspectUrl, setInspectUrl] = useState<string>("");
   
+    const rarityData = getRarity(rarity);
+
+    const backgroundStyle = {
+      background: rarityData.gradientStyle
+    };
+
     useEffect(() => {
-        setInspectUrl(generateKeyChainInspectUrl(currentPattern, id));
-      }, [currentPattern, id]);
+        setInspectUrl(generateKeyChainInspectUrl(currentPattern, id, rarity));
+      }, [currentPattern, id, rarity]);
     
       // Handle slider and number input changes with validation
       const handlePatternChange = (newPattern: number) => {
@@ -25,8 +33,9 @@ const CharmCard: React.FC<CardProps> = ({ id, name, pattern, colorBased, imageSr
       };
 
     return (
-      <div className='charm-card'>
+      <div className='charm-card' style={backgroundStyle}>
         <h3>{name}</h3>
+        <h5>{rarityData.name}</h5>
         <img className='card-image' src={imageSrc} alt={name} />
         <div className='slider-title'>Pattern</div>
         <div className='slider-container'>
