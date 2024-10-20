@@ -40,7 +40,10 @@ const App: React.FC = () => {
 
   ]);
 
-  const [sortOption, setSortOption] = useState<number>(0);
+  const [sortOption, setSortOption] = useState<number>(() => {
+    const storedSort = localStorage.getItem('sort-option');
+    return storedSort ? Number(storedSort) : 0;
+  });
 
   const sortCards = (cards: CardProps[], option: number) => {
     const sorted = [...cards];
@@ -57,6 +60,8 @@ const App: React.FC = () => {
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortOption(+e.target.value);
+
+    localStorage.setItem('sort-option', e.target.value);
   };
 
   const sortedCards = sortCards(cards, sortOption);
