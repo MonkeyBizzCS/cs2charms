@@ -9,9 +9,10 @@ export interface CardProps {
     pattern: number;
     colorBased: boolean;
     imageSrc: string;
+    className: string;
   }
 
-const CharmCard: React.FC<CardProps> = ({ id, rarity, name, pattern, colorBased, imageSrc }) => {
+const CharmCard: React.FC<CardProps> = ({ id, rarity, name, pattern, colorBased, imageSrc, className }) => {
     const [currentPattern, setCurrentPattern] = useState<number>(pattern);
     const [inspectUrl, setInspectUrl] = useState<string>("");
   
@@ -33,7 +34,7 @@ const CharmCard: React.FC<CardProps> = ({ id, rarity, name, pattern, colorBased,
       };
 
     return (
-      <div className='charm-card' style={backgroundStyle}>
+      <div className={'charm-card ' + className} style={backgroundStyle}>
         <h3>{name}</h3>
         <h5>{rarityData.name}</h5>
         <img className='card-image' src={imageSrc} alt={name} />

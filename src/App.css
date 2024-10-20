@@ -36,6 +36,65 @@
   margin-right: auto;
 }
 
+/* Falling images with chaos */
+.falling-image img {
+  animation: chaotic-fall 5s forwards ease-in-out;
+}
+
+/* Chaotic fall animation */
+@keyframes chaotic-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  20% {
+    transform: translateY(100px) rotate(15deg);
+  }
+  40% {
+    transform: translateY(300px) rotate(-20deg);
+  }
+  60% {
+    transform: translateY(600px) rotate(30deg);
+  }
+  80% {
+    transform: translateY(900px) rotate(-15deg);
+  }
+  100% {
+    transform: translateY(1200px) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+/* Apply random durations to each image */
+.falling-image:nth-child(1) img {
+  animation-duration: 5s;
+}
+
+.falling-image:nth-child(2) img {
+  animation-duration: 6s;
+}
+
+.falling-image:nth-child(3) img {
+  animation-duration: 4.5s;
+}
+
+.falling-image:nth-child(4) img {
+  animation-duration: 5.5s;
+}
+
+.falling-image:nth-child(5) img {
+  animation-duration: 6.5s;
+}
+
+/* Adjust rotation and movement per image to add randomness */
+.falling-image:nth-child(odd) img {
+  animation-timing-function: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.falling-image:nth-child(even) img {
+  animation-timing-function: ease-in-out;
+}
+
 .slider-container {
   width: 100%;
   display: flex;
