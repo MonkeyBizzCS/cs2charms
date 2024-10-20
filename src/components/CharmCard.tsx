@@ -39,6 +39,7 @@ const CharmCard: React.FC<CardProps> = ({ id, rarity, name, pattern, colorBased,
         <img className='card-image' src={imageSrc} alt={name} />
         <div className='slider-title'>Pattern</div>
         <div className='slider-container'>
+          <div className="slider-controls">
             <button
             className="arrow-button"
             onClick={() => handlePatternChange(currentPattern - 1)}
@@ -58,14 +59,18 @@ const CharmCard: React.FC<CardProps> = ({ id, rarity, name, pattern, colorBased,
             >
                 &gt;
             </button>
+          </div>
+          <div className="slider-range">
+            <input
+              type="range"
+              min="0"
+              max="100000"
+              value={currentPattern}
+              onChange={(e) => handlePatternChange(Number(e.target.value))}
+            />
+          </div>
         </div>
-        <input
-        type="range"
-        min="0"
-        max="100000"
-        value={currentPattern}
-        onChange={(e) => handlePatternChange(Number(e.target.value))}
-        />
+
         <div>
             <a href={inspectUrl} className='inspect-button'>Inspect in Game</a>
         </div>

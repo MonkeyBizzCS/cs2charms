@@ -37,17 +37,44 @@
 }
 
 .slider-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
   width: 100%;
-  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.slider {
+.slider-controls button,
+.slider-controls input[type="number"] {
+  flex: 1;
+  margin: 0 5px;
+}
+
+input[type="number"] {
+  width: auto;
+  text-align: center;
+}
+
+.slider-range {
   width: 100%;
-  margin-top: 10px;
+}
+
+.slider-range input[type="range"] {
+  width: 100%;
+}
+
+.arrow-button {
+  padding: 5px 10px;
+  font-size: 14px;
+  margin: 0 5px;
+}
+
+input[type="number"] {
+  width: 80px;
+}
+
+.slider-range input[type="range"] {
+  width: 100%;
 }
 
 .slider-title {
